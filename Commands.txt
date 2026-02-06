@@ -1,0 +1,32 @@
+В браузере:
+
+Тест данных БЭК
+http://localhost:8080/api/data
+
+Запуск фронта
+http://localhost:3000/
+
+----------------------------------------------
+
+Стоп-пуск ДОКЕР:
+
+стоп:
+$ docker-compose down
+
+Запуск
+$ docker-compose up
+
+Рестарт
+$ docker-compose restart frontend (backend)
+
+Перестроить
+$ docker-compose build frontend (backend)
+
+
+
+----------------------------------------------
+
+Консоль (bash):
+
+Удалить строку методом DELETE
+$ curl -X DELETE http://localhost:8080/api/delete/10
