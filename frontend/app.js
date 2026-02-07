@@ -4,19 +4,21 @@ const API_URL = 'http://localhost:8080/api';
 
 
 
-async function delItem(itemId) {
+async function delItem(itemId)
+{
     if (!confirm(`Вы действительно хотите удалить запись с Id=${itemId}?`))
     {
         return;
     }
 
- //   alert("Try Delete " + itemId);
+    console.log(`Try Delete id=${itemId}`);
 
     //curl -X DELETE http://localhost:8080/api/delete/11
     try {
-        const response = await fetch(`${API_URL}/delete/${itemId}`, {
-            method: 'DELETE'
-        });
+        const response = await fetch(`${API_URL}/delete/${itemId}`,
+                                        {
+                                        method: 'DELETE'
+                                        });
 
         const result = await response.json();
         
@@ -41,12 +43,62 @@ async function delItem(itemId) {
     }
 }
 
-function editItem(itemId) {
-    alert("Edit " + itemId);
+function cancelEdit(rowNum, oldName, oldDesc, itemId)
+{
+    document.getElementById(`${rowNum}_name`).textContent = oldName;
+    document.getElementById(`${rowNum}_desc`).textContent = oldDesc;
+    document.getElementById(`${rowNum}_actn`).innerHTML = `
+        <button class="edit-btn" onclick="editItem(${itemId}, ${rowNum})">✏️</button>
+        <button class="delt-btn" onclick="delItem(${itemId})">🗑️</button>`;
 }
 
 
-async function loadData() {
+function handleKeyPress(event, rowNum, oldName, oldDesc, itemId)
+{
+    if (event.key === 'Enter')
+    {
+        event.preventDefault();
+        saveRow(rowNum);
+    }
+    else if (event.key === 'Escape')
+    {
+        event.preventDefault();
+        cancelEdit(rowNum, oldName, oldDesc, itemId);
+    }
+}
+
+function editItem(itemId, rowNum)
+{
+   // alert(`StartEdit ${itemId} in row=${rowNum}`);
+
+    const nameCell = document.getElementById(`${rowNum}_name`);
+    const descCell = document.getElementById(`${rowNum}_desc`);
+    const actnCell = document.getElementById(`${rowNum}_actn`);
+    
+    // Сохраняем старые значения
+    const oldName = nameCell.textContent;
+    const oldDesc = descCell.textContent;
+    const oldActn = actnCell.innerHTML;
+    
+    // Заменяем на input-поля
+    nameCell.innerHTML = `<input type="text"
+                            id="edit_name${rowNum}"
+                            value="${oldName}"
+                            onkeypress="handleKeyPress(event, ${rowNum}, '${oldName}', '${oldDesc}', '${itemId}')">`;
+    descCell.innerHTML = `<input type="text"
+                            id="edit_desc${rowNum}"
+                            value="${oldDesc}"
+                            onkeypress="handleKeyPress(event, ${rowNum}, '${oldName}', '${oldDesc}', '${itemId}')">`;
+
+   // Добавляем кнопку сохранения
+   //actnCell.innerHTML = '';
+   actnCell.innerHTML = `
+        <button onclick="saveRow(${rowNum}, '${itemId}')">💾</button>
+        <button onclick="cancelEdit(${rowNum}, '${oldName}', '${oldDesc}', '${itemId}')">❌</button>`;
+}
+
+async function loadData()
+{
     try {
         const response = await fetch(`${API_URL}/data`);
         const data = await response.json();
@@ -55,41 +107,9 @@ async function loadData() {
         console.log('Received data:', data);
         
         const container = document.getElementById('itemsList');
-        // Обрабатывай data в зависимости от структуры ответа
-        // data может быть массивом или объектом с items
- 
- /*       ` <table>
-  <thead>
-    <tr>
-      <th>Заголовок 1</th>
-      <th>Заголовок 2</th>
-      <th>Заголовок 3</th>
-      <th>Заголовок 4</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Данные 1</td>
-      <td>Данные 2</td>
-      <td>Данные 3</td>
-      <td>Данные 4</td>
-    </tr>
-  </tbody>
-</table>`
- */
 
-
- /*
-        if (Array.isArray(data)) {
-            container.innerHTML = `
-                <h3>Items (${data.length}):</h3>
-                <ul>
-                    ${data.map(item => `
-                        <li><strong>${item.name}</strong></li>
-                    `).join('')}
-                </ul>`;*/
-
-        if (Array.isArray(data)) {
+        if (Array.isArray(data))
+        {
             container.innerHTML = `
                 <table>
                     <thead>
@@ -111,14 +131,10 @@ async function loadData() {
                             </tr>
                     </tbody>
                 </table>`;
-        } else if (data.items) {
-           /* container.innerHTML = `
-                <h3>Items (${data.items.length*7}):</h3>
-                <ul>
-                    ${data.items.map(item => `
-                        <li><strong>${item.text || item.name}</strong></li>
-                    `).join('')}
-                </ul>`;*/
+        }
+        else if (data.items)
+        {
+            let rowNum = 0;
             container.innerHTML = `
                 <table>
                     <thead>
@@ -133,20 +149,24 @@ async function loadData() {
                         ${data.items.map(item => `
                             <tr>
                                 <td>${item.id}</td>
-                                <td>${item.name}</td>
-                                <td>${item.description}</td>
-                                <td>
-                                    <button class="edit-btn" onclick="editItem(${item.id})">✏️</button>
-                                    <button class="delete-btn" onclick="delItem(${item.id})">🗑️</button>
+                                <td id="${++rowNum}_name">${item.name}</td>
+                                <td id="${  rowNum}_desc">${item.description}</td>
+                                <td id="${  rowNum}_actn">
+                                    <button class="edit-btn" onclick="editItem(${item.id}, ${rowNum})">✏️</button>
+                                    <button class="delt-btn" onclick="delItem(${item.id})">🗑️</button>
                                 </td>
                                 `).join('')}
                             </tr>
                     </tbody>
                 </table>`;
-        } else {
+        }
+        else
+        {
             container.innerHTML = JSON.stringify(data, null, 2);
         }
-    } catch (error) {
+    }
+    catch (error)
+    {
         console.error('Error:', error);
         document.getElementById('data-container').innerHTML = 
             `<p style="color: red;">Error: ${error.message}</p>`;

@@ -79,11 +79,18 @@ button:hover {
     border-bottom: none;
 }
 
-.delete-btn {
+.delt-btn {
     background: #ff4757;
     padding: 6px 12px;
     font-size: 14px;
 }
+
+.edit-btn {
+    background: #fff947;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
 
 .info {
     margin-top: 20px;
