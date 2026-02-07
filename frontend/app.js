@@ -5,11 +5,44 @@ const API_URL = 'http://localhost:8080/api';
 
 
 async function delItem(itemId) {
+    if (!confirm(`Вы действительно хотите удалить запись с Id=${itemId}?`))
+    {
+        return;
+    }
 
+ //   alert("Try Delete " + itemId);
+
+    //curl -X DELETE http://localhost:8080/api/delete/11
+    try {
+        const response = await fetch(`${API_URL}/delete/${itemId}`, {
+            method: 'DELETE'
+        });
+
+        const result = await response.json();
+        
+        if (response.ok)
+        {
+            if (result.status == "True" || result.status == true)
+            {
+                alert(`Запись c Id=${itemId} успешно удалена!`);
+                loadData(); // Reload the list
+            }
+            else
+            {
+                alert(`Не удалось удалить: ${result.message || "Неизвестная ошибка"}`);
+            }
+        }
+        else
+        {
+            alert(`Не удалось удалить, сервер вернул ошибку: ${response.status} ${response.statusText}`);
+        }
+    } catch (error) {
+        alert(`Error: ${error.message}`);
+    }
 }
 
-async function editItem(itemId) {
-    
+function editItem(itemId) {
+    alert("Edit " + itemId);
 }
 
 
