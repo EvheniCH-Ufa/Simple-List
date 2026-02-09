@@ -1,8 +1,24 @@
-// Меняем URL на те, которые есть в бэкенде
-//const API_URL = 'http://localhost:8080';
 const API_URL = 'http://localhost:8080/api';
 
+/*
+Логика редактирования:
+создаем глоб переменную + структура (поля + номер строки) 
+- в редактировании (editItem) заходим, сейвим все элементы, изменяем номер строки в из_едитинг;
+- завершаем редактор, из_едитинг = -1;
+- если начинаем следующий, то проверяем сначала редактируется что-то или нет:
+--- если не редактируется, то начинаем редактирование
+--- если редактируется, то проверяем есть ли изменения (да/нет):
+------ да: сохранить? да/нет - сохраняем и заходим в редактор новой строки
+------ нет: заходим в редактор новой строки
+*/ 
 
+let editRow = -1;  // -1 - Not editing
+let oldValues = {
+    rowNum          : -1,
+    id              : -1,
+    name            : "",
+    description     : ""
+}
 
 async function delItem(itemId)
 {
@@ -43,33 +59,79 @@ async function delItem(itemId)
     }
 }
 
-function cancelEdit(rowNum, oldName, oldDesc, itemId)
+
+function checkEdit()
 {
-    document.getElementById(`${rowNum}_name`).textContent = oldName;
+    return (editRow >= 0);
+}
+
+async function saveItem()
+{
+        /* */
+    const newName = document.getElementById(`${editRow}_name`).textContent;
+    if (newName != oldValues.name)
+    
+    //= oldName;
     document.getElementById(`${rowNum}_desc`).textContent = oldDesc;
     document.getElementById(`${rowNum}_actn`).innerHTML = `
         <button class="edit-btn" onclick="editItem(${itemId}, ${rowNum})">✏️</button>
         <button class="delt-btn" onclick="delItem(${itemId})">🗑️</button>`;
+
+
+    // в конце обязательно говорим, что уже не редачим
+    editRow = -1;
+}
+
+function cancelEdit()
+{
+    document.getElementById(`${rowNum}_name`).textContent = oldValues.name;
+    document.getElementById(`${rowNum}_desc`).textContent = oldValues.description;
+    document.getElementById(`${rowNum}_actn`).innerHTML = `
+        <button class="edit-btn" onclick="editItem(${rowNum})">✏️</button>
+        <button class="delt-btn" onclick="delItem(${oldValues.id})">🗑️</button>`;
+
+    editRow = -1;
 }
 
 
-function handleKeyPress(event, rowNum, oldName, oldDesc, itemId)
+function handleKeyPress(event, rowNum)
 {
     if (event.key === 'Enter')
     {
         event.preventDefault();
-        saveRow(rowNum);
+        saveItem();
     }
     else if (event.key === 'Escape')
     {
         event.preventDefault();
-        cancelEdit(rowNum, oldName, oldDesc, itemId);
+        cancelEdit();
     }
 }
 
-function editItem(itemId, rowNum)
+function editItem(rowNum)
 {
-   // alert(`StartEdit ${itemId} in row=${rowNum}`);
+    // alert(`StartEdit ${itemId} in row=${rowNum}`);
+    if (checkEdit())
+    {
+        if (confirm(`Редактируется строка ${editRow},\n
+                     Id=${oldValues.id},\n
+                     Наименование ${oldValues.name}.\n
+                     Сохранить?`))
+        {
+            newName = document.getElementById(`edit_name${editRow}`).value; 
+            
+            if (newName === "")
+            {
+                alert("Наименование не должно быть пустым!");
+                return;
+            }
+            saveItem();
+        }
+        else
+        {
+            cancelEdit();
+        }
+    }
 
     const nameCell = document.getElementById(`${rowNum}_name`);
     const descCell = document.getElementById(`${rowNum}_desc`);
@@ -78,23 +140,23 @@ function editItem(itemId, rowNum)
     // Сохраняем старые значения
     const oldName = nameCell.textContent;
     const oldDesc = descCell.textContent;
-    const oldActn = actnCell.innerHTML;
     
     // Заменяем на input-поля
     nameCell.innerHTML = `<input type="text"
                             id="edit_name${rowNum}"
                             value="${oldName}"
-                            onkeypress="handleKeyPress(event, ${rowNum}, '${oldName}', '${oldDesc}', '${itemId}')">`;
+                            placeholder="Имя не должно быть пустым!"
+                            onkeypress="handleKeyPress(event, ${rowNum})">`;
     descCell.innerHTML = `<input type="text"
                             id="edit_desc${rowNum}"
+                            placeholder="Описание..."
                             value="${oldDesc}"
-                            onkeypress="handleKeyPress(event, ${rowNum}, '${oldName}', '${oldDesc}', '${itemId}')">`;
+                            onkeypress="handleKeyPress(event, ${rowNum})">`;
 
    // Добавляем кнопку сохранения
-   //actnCell.innerHTML = '';
    actnCell.innerHTML = `
         <button onclick="saveRow(${rowNum}, '${itemId}')">💾</button>
-        <button onclick="cancelEdit(${rowNum}, '${oldName}', '${oldDesc}', '${itemId}')">❌</button>`;
+        <button onclick="cancelEdit(${rowNum})">❌</button>`;
 }
 
 async function loadData()
@@ -152,7 +214,7 @@ async function loadData()
                                 <td id="${++rowNum}_name">${item.name}</td>
                                 <td id="${  rowNum}_desc">${item.description}</td>
                                 <td id="${  rowNum}_actn">
-                                    <button class="edit-btn" onclick="editItem(${item.id}, ${rowNum})">✏️</button>
+                                    <button class="edit-btn" onclick="editItem(${rowNum})">✏️</button>
                                     <button class="delt-btn" onclick="delItem(${item.id})">🗑️</button>
                                 </td>
                                 `).join('')}
