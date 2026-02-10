@@ -68,16 +68,54 @@ function checkEdit()
 async function saveItem()
 {
         /* */
-    const newName = document.getElementById(`${editRow}_name`).textContent;
-    if (newName != oldValues.name)
+    const newName = document.getElementById(`${editRow}_name`).textContent.trim();
+    const newDesc = document.getElementById(`${editRow}_desc`).textContent.trim();
+    if (newName != oldValues.name || newDesc != oldValues.description)
+    {
+        if ((newName.replace(/\s+/g, '')) === "")
+        {
+            alert(`Имя не должно быть пустым!`);
+            return;
+        }
+    }
     
+    alert("Сохранение изменений еще не дописано!!!\nДописать backend, а уж затем сюда!!!");
+   // return;
+    /*
+    try {
+        const response = await fetch(`${API_URL}/items`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                name: name,  
+                description: description 
+            })
+        });
+        
+        if (response.ok) {
+            document.getElementById('item-name').value = '';
+            document.getElementById('item-desc').value = '';
+            loadData(); // Reload the list
+        } else {
+            alert('Failed to add item');
+        }
+    }
+    catch (error)
+    {
+        alert(`Error: ${error.message}`);
+    }
+
+
+
     //= oldName;
     document.getElementById(`${rowNum}_desc`).textContent = oldDesc;
     document.getElementById(`${rowNum}_actn`).innerHTML = `
         <button class="edit-btn" onclick="editItem(${itemId}, ${rowNum})">✏️</button>
         <button class="delt-btn" onclick="delItem(${itemId})">🗑️</button>`;
 
-
+*/
     // в конце обязательно говорим, что уже не редачим
     editRow = -1;
 }
@@ -239,12 +277,10 @@ async function addItem() {
     const name = document.getElementById('item-name').value;
     const description = document.getElementById('item-desc').value;
 
-    //alert('addItem');
-    // Ждем 1 секунду
-    await new Promise(resolve => setTimeout(resolve, 1000));
+//    await new Promise(resolve => setTimeout(resolve, 1000));
     
     if (!name) {
-        alert('Please enter item name');
+        alert('Имя не должно быть пустым');
         return;
     }
     
@@ -267,7 +303,9 @@ async function addItem() {
         } else {
             alert('Failed to add item');
         }
-    } catch (error) {
+    }
+    catch (error)
+    {
         alert(`Error: ${error.message}`);
     }
 }
