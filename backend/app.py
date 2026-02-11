@@ -102,7 +102,7 @@ def init_database():
             print(f"Database initialization error: {e}")
 
 # Инициализируем БД при старте
-#init_database()
+init_database()
 
 @app.get("/")
 async def root():
@@ -215,6 +215,44 @@ async def create_item(item: dict):
         }
     except Error as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.patch("/api/edit")
+async def edit_item(item: dict):
+    name = item.get("name", "").strip()
+    description = item.get("description", "").strip()
+    
+    if not name:
+        raise HTTPException(status_code=400, detail="Name is required")
+    
+    conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection failed")
+    
+
+
+    # тут запрашиваем этот ID если есть, то меняем
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO items (name, description) VALUES (%s, %s) RETURNING id",
+            (name, description)
+        )
+        new_id = cur.fetchone()[0]
+        conn.commit()
+        cur.close()
+        conn.close()
+        
+        return {
+            "message": "Item created successfully",
+            "id": new_id,
+            "name": name,
+            "description": description
+        }
+    except Error as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
 
 @app.get("/api/health")
 async def health_check():
