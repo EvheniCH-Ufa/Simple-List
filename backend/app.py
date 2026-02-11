@@ -116,7 +116,7 @@ def delete_item(item_id: int):
        # raise HTTPException(status_code=500, detail="Database connection failed")
         return {
             "status": "False",
-            "note": "Database connection failed"
+            "message": "Database connection failed"
         }
 
     try:
@@ -218,6 +218,12 @@ async def create_item(item: dict):
 
 @app.patch("/api/edit")
 async def edit_item(item: dict):
+    id = item.get("id", 0)
+    if id is not None:
+        id = int(str(id).strip()) if str(id).strip() else 0
+    else 
+        id = 0 
+
     name = item.get("name", "").strip()
     description = item.get("description", "").strip()
     
@@ -228,31 +234,51 @@ async def edit_item(item: dict):
     if not conn:
         raise HTTPException(status_code=500, detail="Database connection failed")
     
-
-
     # тут запрашиваем этот ID если есть, то меняем
     try:
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO items (name, description) VALUES (%s, %s) RETURNING id",
-            (name, description)
+            "SELECT id FROM items WHERE id = %s",
+            (id,) 
         )
-        new_id = cur.fetchone()[0]
+
+        row = cur.fetchone()
+        if not row:
+            # Ничего не выбрали - такой записи не было
+            return {
+                "status": "False",
+                "message": "Item not found (nothing to edit)",
+                "id": item_id,
+                "rows_editing": 0
+            }
+
+        cur.execute(
+            "UPDATE items SET name = %s, description = %s WHERE id = %s RETURNING id",
+            (name, description, id) 
+        )
+
+        row = cur.fetchone()
+
         conn.commit()
         cur.close()
         conn.close()
-        
+
+        if not row or row.rowcount == 0:
+            return {
+                "status": "False",
+                "message": "Error in processing query to DB",
+                "id": 0,
+                "rows_editing": 0
+            }
+
         return {
-            "message": "Item created successfully",
-            "id": new_id,
-            "name": name,
-            "description": description
-        }
+            "status": "True",
+            "message": "Item is editing in DB",
+            "id": id,
+            "rows_editing": row.rowcount
+            }
     except Error as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-
 
 @app.get("/api/health")
 async def health_check():
