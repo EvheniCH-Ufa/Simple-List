@@ -81,25 +81,28 @@ async function saveItem()
     
     alert("Сохранение изменений еще не дописано!!!\nДописать backend, а уж затем сюда!!!");
    // return;
-    /*
+    
     try {
         const response = await fetch(`${API_URL}/items`, {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ 
-                name: name,  
-                description: description 
+                id : oldValues.id,
+                name: newName,  
+                description: newDesc
             })
         });
         
         if (response.ok) {
-            document.getElementById('item-name').value = '';
-            document.getElementById('item-desc').value = '';
-            loadData(); // Reload the list
+            // записываем данные в структуру олдВалуес и вызываем КАНЦЕЛ
+            oldValues.name = newName;
+            oldValues.description = newDesc;
+            cancelEdit();
+           // loadData(); // Reload the list
         } else {
-            alert('Failed to add item');
+            alert('Failed to edit item');
         }
     }
     catch (error)
@@ -107,9 +110,7 @@ async function saveItem()
         alert(`Error: ${error.message}`);
     }
 
-
-
-    //= oldName;
+    /*
     document.getElementById(`${rowNum}_desc`).textContent = oldDesc;
     document.getElementById(`${rowNum}_actn`).innerHTML = `
         <button class="edit-btn" onclick="editItem(${itemId}, ${rowNum})">✏️</button>
@@ -130,7 +131,6 @@ function cancelEdit()
 
     editRow = -1;
 }
-
 
 function handleKeyPress(event, rowNum)
 {
