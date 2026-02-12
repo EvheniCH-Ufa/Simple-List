@@ -221,7 +221,7 @@ async def edit_item(item: dict):
     id = item.get("id", 0)
     if id is not None:
         id = int(str(id).strip()) if str(id).strip() else 0
-    else 
+    else:
         id = 0 
 
     name = item.get("name", "").strip()
