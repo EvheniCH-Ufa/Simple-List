@@ -11,11 +11,12 @@ const API_URL = 'http://localhost:8080/api';
 ------ да: сохранить? да/нет - сохраняем и заходим в редактор новой строки
 ------ нет: заходим в редактор новой строки
 */ 
+const NOT_EDIT_ROW = -1;
 
-let editRow = -1;  // -1 - Not editing
+let editRowGlob = NOT_EDIT_ROW;  // -1 - Not editing
 let oldValues = {
-    rowNum          : -1,
-    id              : -1,
+    rowNum          : NOT_EDIT_ROW,
+    id              : NOT_EDIT_ROW,
     name            : "",
     description     : ""
 }
@@ -62,14 +63,22 @@ async function delItem(itemId)
 
 function checkEdit()
 {
-    return (editRow >= 0);
+    return (editRowGlob != NOT_EDIT_ROW);
 }
 
 async function saveItem()
 {
-        /* */
-    const newName = document.getElementById(`${editRow}_name`).textContent.trim();
-    const newDesc = document.getElementById(`${editRow}_desc`).textContent.trim();
+    alert("saveItem()");
+
+ /*   descCell.innerHTML = `<input type="text"
+                            id="edit_desc${rowNum}"
+                            placeholder="Описание..."
+                            value="${oldDesc}"*/
+
+
+    const newName = document.getElementById(`edit_name${editRowGlob}`).value.trim();
+    const newDesc = document.getElementById(`edit_desc${editRowGlob}`).value.trim();
+
     if (newName != oldValues.name || newDesc != oldValues.description)
     {
         if ((newName.replace(/\s+/g, '')) === "")
@@ -78,12 +87,14 @@ async function saveItem()
             return;
         }
     }
+
+   // alert(`saveItem(): newName = ${newName},\ndesc = ${newDesc}`);
     
-    alert("Сохранение изменений еще не дописано!!!\nДописать backend, а уж затем сюда!!!");
+  //  alert("Сохранение изменений еще не дописано!!!\nДописать backend, а уж затем сюда!!!");
    // return;
     
     try {
-        const response = await fetch(`${API_URL}/items`, {
+        const response = await fetch(`${API_URL}/edit`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -97,11 +108,14 @@ async function saveItem()
         
         if (response.ok) {
             // записываем данные в структуру олдВалуес и вызываем КАНЦЕЛ
+            alert(`(response.ok)`);
             oldValues.name = newName;
             oldValues.description = newDesc;
             cancelEdit();
            // loadData(); // Reload the list
-        } else {
+        }
+        else {
+            alert(`(response. ne ok)`);
             alert('Failed to edit item');
         }
     }
@@ -118,18 +132,19 @@ async function saveItem()
 
 */
     // в конце обязательно говорим, что уже не редачим
-    editRow = -1;
+    editRowGlob = NOT_EDIT_ROW;
 }
 
 function cancelEdit()
 {
-    document.getElementById(`${rowNum}_name`).textContent = oldValues.name;
-    document.getElementById(`${rowNum}_desc`).textContent = oldValues.description;
-    document.getElementById(`${rowNum}_actn`).innerHTML = `
-        <button class="edit-btn" onclick="editItem(${rowNum})">✏️</button>
+    alert(`cancelEdit(${editRowGlob})`);
+    document.getElementById(`${editRowGlob}_name`).textContent = oldValues.name;
+    document.getElementById(`${editRowGlob}_desc`).textContent = oldValues.description;
+    document.getElementById(`${editRowGlob}_actn`).innerHTML = `
+        <button class="edit-btn" onclick="editItem(${editRowGlob})">✏️</button>
         <button class="delt-btn" onclick="delItem(${oldValues.id})">🗑️</button>`;
 
-    editRow = -1;
+    editRowGlob = NOT_EDIT_ROW;
 }
 
 function handleKeyPress(event, rowNum)
@@ -148,15 +163,15 @@ function handleKeyPress(event, rowNum)
 
 function editItem(rowNum)
 {
-    // alert(`StartEdit ${itemId} in row=${rowNum}`);
+    //alert("editItem(rowNum)");
     if (checkEdit())
     {
-        if (confirm(`Редактируется строка ${editRow},\n
-                     Id=${oldValues.id},\n
-                     Наименование ${oldValues.name}.\n
+        if (confirm(`Редактируется строка ${editRowGlob},
+                     Id=${oldValues.id},
+                     Наименование ${oldValues.name}.
                      Сохранить?`))
         {
-            newName = document.getElementById(`edit_name${editRow}`).value; 
+            newName = document.getElementById(`edit_name${editRowGlob}`).value; 
             
             if (newName === "")
             {
@@ -176,9 +191,10 @@ function editItem(rowNum)
     const actnCell = document.getElementById(`${rowNum}_actn`);
     
     // Сохраняем старые значения
+    const oldId = document.getElementById(`${rowNum}_id`).textContent;
     const oldName = nameCell.textContent;
     const oldDesc = descCell.textContent;
-    
+
     // Заменяем на input-поля
     nameCell.innerHTML = `<input type="text"
                             id="edit_name${rowNum}"
@@ -191,10 +207,18 @@ function editItem(rowNum)
                             value="${oldDesc}"
                             onkeypress="handleKeyPress(event, ${rowNum})">`;
 
+ //   alert("asdf");
    // Добавляем кнопку сохранения
-   actnCell.innerHTML = `
-        <button onclick="saveRow(${rowNum}, '${itemId}')">💾</button>
+    actnCell.innerHTML = `
+        <button onclick="saveRow(${rowNum})">💾</button>
         <button onclick="cancelEdit(${rowNum})">❌</button>`;
+
+    oldValues.name = oldName;
+    oldValues.description = oldDesc;
+    oldValues.id  = oldId;
+    oldValues.rowNum = rowNum;
+
+    editRowGlob = rowNum;
 }
 
 async function loadData()
@@ -248,8 +272,8 @@ async function loadData()
                     <tbody>
                         ${data.items.map(item => `
                             <tr>
-                                <td>${item.id}</td>
-                                <td id="${++rowNum}_name">${item.name}</td>
+                                <td id="${++rowNum}_id">${item.id}</td>
+                                <td id="${  rowNum}_name">${item.name}</td>
                                 <td id="${  rowNum}_desc">${item.description}</td>
                                 <td id="${  rowNum}_actn">
                                     <button class="edit-btn" onclick="editItem(${rowNum})">✏️</button>
