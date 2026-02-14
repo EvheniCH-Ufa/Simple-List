@@ -236,11 +236,15 @@ async def edit_item(item: dict):
     
     # тут запрашиваем этот ID если есть, то меняем
     try:
+        print("+++ Zashli v try +++")
+
         cur = conn.cursor()
         cur.execute(
             "SELECT id FROM items WHERE id = %s",
             (id,) 
         )
+
+        print("+++ Vypolnili SELECT +++")
 
         row = cur.fetchone()
         if not row:
@@ -252,18 +256,23 @@ async def edit_item(item: dict):
                 "rows_editing": 0
             }
 
+        print("+++ SELECT not 0 +++")
+
         cur.execute(
             "UPDATE items SET name = %s, description = %s WHERE id = %s RETURNING id",
             (name, description, id) 
         )
 
+        print("+++ UPDATE name = %s, description = %s WHERE id = %s +++", (name, description, id))
+
+        rows = cur.rowcount
         row = cur.fetchone()
 
         conn.commit()
         cur.close()
         conn.close()
 
-        if not row or row.rowcount == 0:
+        if not row or rows == 0:
             return {
                 "status": "False",
                 "message": "Error in processing query to DB",
@@ -275,7 +284,7 @@ async def edit_item(item: dict):
             "status": "True",
             "message": "Item is editing in DB",
             "id": id,
-            "rows_editing": row.rowcount
+            "rows_editing": rows
             }
     except Error as e:
         raise HTTPException(status_code=500, detail=str(e))
