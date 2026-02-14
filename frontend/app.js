@@ -70,12 +70,6 @@ async function saveItem()
 {
     alert("saveItem()");
 
- /*   descCell.innerHTML = `<input type="text"
-                            id="edit_desc${rowNum}"
-                            placeholder="Описание..."
-                            value="${oldDesc}"*/
-
-
     const newName = document.getElementById(`edit_name${editRowGlob}`).value.trim();
     const newDesc = document.getElementById(`edit_desc${editRowGlob}`).value.trim();
 
@@ -108,14 +102,14 @@ async function saveItem()
         
         if (response.ok) {
             // записываем данные в структуру олдВалуес и вызываем КАНЦЕЛ
-            alert(`(response.ok)`);
+           // alert(`(response.ok)`);
             oldValues.name = newName;
             oldValues.description = newDesc;
             cancelEdit();
            // loadData(); // Reload the list
         }
         else {
-            alert(`(response. ne ok)`);
+            //alert(`(response. ne ok)`);
             alert('Failed to edit item');
         }
     }
@@ -134,6 +128,7 @@ async function saveItem()
     // в конце обязательно говорим, что уже не редачим
     editRowGlob = NOT_EDIT_ROW;
 }
+
 
 function cancelEdit()
 {
@@ -210,7 +205,7 @@ function editItem(rowNum)
  //   alert("asdf");
    // Добавляем кнопку сохранения
     actnCell.innerHTML = `
-        <button onclick="saveRow(${rowNum})">💾</button>
+        <button onclick="saveItem(${rowNum})">💾</button>
         <button onclick="cancelEdit(${rowNum})">❌</button>`;
 
     oldValues.name = oldName;
