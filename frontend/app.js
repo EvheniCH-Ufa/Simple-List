@@ -23,7 +23,7 @@ let oldValues = {
 
 document.onkeydown = function(event)
 {
-    if (editRowGlob > 0 && // если что-то редактируется
+    if (editRowGlob > 0 &&                                          // если что-то редактируется
         (document.activeElement.id === `edit_name${editRowGlob}` || // если это один из эдитов
             document.activeElement.id === `edit_desc${editRowGlob}` // но вне режима редактора это недоступно, теоретически
         ))
@@ -86,7 +86,7 @@ function checkEdit()
 
 async function saveItem()
 {
-    //alert("saveItem()");
+    //alert("saveItem()"); // для отладки
 
     const newName = document.getElementById(`edit_name${editRowGlob}`).value.trim();
     const newDesc = document.getElementById(`edit_desc${editRowGlob}`).value.trim();
@@ -99,11 +99,6 @@ async function saveItem()
             return;
         }
     }
-
-   // alert(`saveItem(): newName = ${newName},\ndesc = ${newDesc}`);
-    
-  //  alert("Сохранение изменений еще не дописано!!!\nДописать backend, а уж затем сюда!!!");
-   // return;
     
     try {
         const response = await fetch(`${API_URL}/edit`, {
@@ -120,10 +115,9 @@ async function saveItem()
         
         if (response.ok) {
             // записываем данные в структуру олдВалуес и вызываем КАНЦЕЛ
-           // alert(`(response.ok)`);
             oldValues.name = newName;
             oldValues.description = newDesc;
-            cancelEdit();
+            cancelEdit();                    // эта функция вернет значения из ОЛДвалуес в нужные
            // loadData(); // Reload the list
         }
         else {
@@ -150,7 +144,7 @@ async function saveItem()
 
 function cancelEdit()
 {
-    alert(`cancelEdit(${editRowGlob})`);
+    //alert(`cancelEdit(${editRowGlob})`);
     document.getElementById(`${editRowGlob}_name`).textContent = oldValues.name;
     document.getElementById(`${editRowGlob}_desc`).textContent = oldValues.description;
     document.getElementById(`${editRowGlob}_actn`).innerHTML = `
@@ -204,11 +198,10 @@ function editItem(rowNum)
                             value="${oldDesc}"
                             placeholder="Описание...">`;
 
- //   alert("asdf");
    // Добавляем кнопку сохранения
     actnCell.innerHTML = `
-        <button onclick="saveItem(${rowNum})">💾</button>
-        <button onclick="cancelEdit(${rowNum})">❌</button>`;
+        <button onclick="saveItem()">💾</button>
+        <button onclick="cancelEdit()">❌</button>`;
 
     oldValues.name = oldName;
     oldValues.description = oldDesc;
@@ -298,8 +291,6 @@ async function addItem() {
     const name = document.getElementById('item-name').value;
     const description = document.getElementById('item-desc').value;
 
-//    await new Promise(resolve => setTimeout(resolve, 1000));
-    
     if (!name) {
         alert('Имя не должно быть пустым');
         return;
