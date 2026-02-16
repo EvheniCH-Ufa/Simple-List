@@ -21,6 +21,24 @@ let oldValues = {
     description     : ""
 }
 
+document.onkeydown = function(event)
+{
+    if (editRowGlob > 0 && // если что-то редактируется
+        (document.activeElement.id === `edit_name${editRowGlob}` || // если это один из эдитов
+            document.activeElement.id === `edit_desc${editRowGlob}` // но вне режима редактора это недоступно, теоретически
+        ))
+    {
+        if (event.key === 'Enter')
+        {
+            saveItem();
+        }
+        else if (event.key === 'Escape')
+        {
+            cancelEdit();
+        }
+    }
+}
+
 async function delItem(itemId)
 {
     if (!confirm(`Вы действительно хотите удалить запись с Id=${itemId}?`))
@@ -68,7 +86,7 @@ function checkEdit()
 
 async function saveItem()
 {
-    alert("saveItem()");
+    //alert("saveItem()");
 
     const newName = document.getElementById(`edit_name${editRowGlob}`).value.trim();
     const newDesc = document.getElementById(`edit_desc${editRowGlob}`).value.trim();
@@ -142,20 +160,6 @@ function cancelEdit()
     editRowGlob = NOT_EDIT_ROW;
 }
 
-function handleKeyPress(event, rowNum)
-{
-    if (event.key === 'Enter')
-    {
-        event.preventDefault();
-        saveItem();
-    }
-    else if (event.key === 'Escape')
-    {
-        event.preventDefault();
-        cancelEdit();
-    }
-}
-
 function editItem(rowNum)
 {
     //alert("editItem(rowNum)");
@@ -194,13 +198,11 @@ function editItem(rowNum)
     nameCell.innerHTML = `<input type="text"
                             id="edit_name${rowNum}"
                             value="${oldName}"
-                            placeholder="Имя не должно быть пустым!"
-                            onkeypress="handleKeyPress(event, ${rowNum})">`;
+                            placeholder="Имя не должно быть пустым!">`;
     descCell.innerHTML = `<input type="text"
                             id="edit_desc${rowNum}"
-                            placeholder="Описание..."
                             value="${oldDesc}"
-                            onkeypress="handleKeyPress(event, ${rowNum})">`;
+                            placeholder="Описание...">`;
 
  //   alert("asdf");
    // Добавляем кнопку сохранения
