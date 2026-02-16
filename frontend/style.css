@@ -104,3 +104,33 @@ button:hover {
 .info p {
     margin: 5px 0;
 }
+
+.table-columns {
+    width: 100%;
+    border-collapse: collapse;
+    color: #666;
+    table-layout: fixed; /* Фиксированная разметка таблицы */
+}
+
+.table-columns th:nth-child(1),
+.table-columns td:nth-child(1) {
+    width: 10%; /* ID */
+    text-align: center;
+}
+
+.table-columns th:nth-child(2),
+.table-columns td:nth-child(2) {
+    width: 25%; /* Наименование */
+}
+
+.table-columns th:nth-child(3),
+.table-columns td:nth-child(3) {
+    width: 45%; /* Описание */
+}
+
+.table-columns th:nth-child(4),
+.table-columns td:nth-child(4) {
+    width: 20%; /* Действия */
+    text-align: center;
+    
+}

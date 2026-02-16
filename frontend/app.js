@@ -250,7 +250,7 @@ async function loadData()
         {
             let rowNum = 0;
             container.innerHTML = `
-                <table>
+                <table class="table-columns">
                     <thead>
                         <tr>
                         <th>Id</th>

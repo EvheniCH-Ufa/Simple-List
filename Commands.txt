@@ -30,3 +30,20 @@ $ docker-compose build frontend (backend)
 
 Удалить строку методом DELETE
 $ curl -X DELETE http://localhost:8080/api/delete/10
+
+
+----------------------------------------------
+Git
+# Установите ваше имя
+git config --global user.name "EvheniCH-Ufa" #--global - глобально, а не для текущего проекта
+
+# Установите ваш email
+git config --global user.email "Ch.Ew.Se@yandex.ru"
+
+Проверка автора последних коммитов
+bash
+# Посмотреть последние коммиты
+git log -3
+
+# Или в компактном виде
+git log --oneline -3
