@@ -13,17 +13,7 @@ docker-compose up --build
 # Backend API: http://localhost:8000
 # API Docs (Swagger): http://localhost:8000/docs
 # API Docs (ReDoc): http://localhost:8000/redoc
-<<<<<<< HEAD
-<<<<<<< HEAD
 ```
-
-=======
->>>>>>> 9a03777 ("update readme.md")
-=======
-```
-
->>>>>>> 0d3d535 (Обновил readme)
-
 ## 📁 Структура
 
 ``` txt
@@ -75,15 +65,6 @@ simple-list/
 | **Enter** | Сохранить | В режиме редактирования |
 | **Escape** | Отмена | В режиме редактирования |
 
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 9a03777 ("update readme.md")
-=======
->>>>>>> 0d3d535 (Обновил readme)
 ## 🔄 Логика работы приложения
 
 ### Взаимодействие компонентов
@@ -96,16 +77,9 @@ graph TD
     C -->|Загрузка страницы| D[GET /api/data]
     C -->|Добавить запись| E[POST /api/add]
     C -->|Редактировать| F[PATCH /api/edit]
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     C -->|Удалить запись| G[DELETE /api/delete/id]
-=======
-    C -->|Удалить запись| G[DELETE /api/delete/{id}]
->>>>>>> 9a03777 ("update readme.md")
-=======
-    C -->|Удалить запись| G[DELETE /api/delete/id]
->>>>>>> 0d3d535 (Обновил readme)
-    
+  
     D --> H[PostgreSQL]
     E --> H
     F --> H
@@ -114,15 +88,8 @@ graph TD
     H --> I[FastAPI Backend]
     I --> J[Обновление интерфейса]
     J --> B
-<<<<<<< HEAD
-<<<<<<< HEAD
-```
-=======
 
->>>>>>> 9a03777 ("update readme.md")
-=======
 ```
->>>>>>> 0d3d535 (Обновил readme)
 
 ## 📝 Примеры использования
 
@@ -147,13 +114,4 @@ graph TD
 - ⚡ **FastAPI** + **PostgreSQL** — высокопроизводительный бэкенд с базой данных
 - 🎨 **JavaScript (ES6+)** + **HTML/CSS** — адаптивный пользовательский интерфейс
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 🔗 GitHub: [EvheniCH-Ufa/Simple-List](https://github.com/EvheniCH-Ufa/Simple-List)
-=======
-🔗 GitHub: [EvheniCH-Ufa/Simple-List](https://github.com/EvheniCH-Ufa/Simple-List)
->>>>>>> 9a03777 ("update readme.md")
-=======
-🔗 GitHub: [EvheniCH-Ufa/Simple-List](https://github.com/EvheniCH-Ufa/Simple-List)
-
->>>>>>> 0d3d535 (Обновил readme)
