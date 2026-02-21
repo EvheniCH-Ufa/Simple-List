@@ -23,6 +23,26 @@ $ docker-compose restart frontend (backend)
 $ docker-compose build frontend (backend)
 
 
+## 🐳 Команды Docker
+
+# Запуск
+docker-compose up --build
+
+# Запуск в фоне
+docker-compose up -d --build
+
+# Остановка
+docker-compose down
+
+# Просмотр логов
+docker-compose logs -f
+
+# Очистка
+docker-compose down -v --rmi all
+\`\`\`
+
+
+
 
 ----------------------------------------------
 
@@ -47,3 +67,10 @@ git log -3
 
 # Или в компактном виде
 git log --oneline -3
+
+# подключен?
+git remote -v
+
+git status
+git commit -m "Обновление frontend: index.html и style.css"
+git push Simple-List main
