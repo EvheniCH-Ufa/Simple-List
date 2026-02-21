@@ -16,7 +16,7 @@
                    onkeypress="if(event.key === 'Enter') addItem()">
             <input type="text" id="item-desc" placeholder="Описание..." 
                    onkeypress="if(event.key === 'Enter') addItem()">
-            <button onclick="addItem()">➕ Добавить</button>
+            <button class="tooltip-btn" onclick="addItem()">➕ Добавить<span class="tooltip">Добавить новый элемент</span></button>
         </div>
         
         <div id="itemsList" class="items-list">
@@ -27,8 +27,7 @@
             <p>💾 Данные сохраняются в PostgreSQL</p>
             <p>🐳 Запущено в Docker контейнерах</p>
         </div>
-    </div>
-    
+    </div>    
    
 </body>
 </html>
