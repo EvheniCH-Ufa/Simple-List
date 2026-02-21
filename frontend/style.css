@@ -1,4 +1,5 @@
-body {
+body
+{
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
@@ -9,7 +10,8 @@ body {
     padding: 20px;
 }
 
-.container {
+.container
+{
     background: white;
     border-radius: 15px;
     padding: 30px;
@@ -18,19 +20,22 @@ body {
     max-width: 600px;
 }
 
-h1 {
+h1
+{
     color: #333;
     text-align: center;
     margin-bottom: 30px;
 }
 
-.add-form {
+.add-form
+{
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
 }
 
-#newItem {
+#newItem
+{
     flex: 1;
     padding: 12px;
     border: 2px solid #ddd;
@@ -38,12 +43,14 @@ h1 {
     font-size: 16px;
 }
 
-#newItem:focus {
+#newItem:focus
+{
     outline: none;
     border-color: #667eea;
 }
 
-button {
+button
+{
     padding: 12px 24px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -54,11 +61,13 @@ button {
     transition: transform 0.2s;
 }
 
-button:hover {
+button:hover
+{
     transform: translateY(-2px);
 }
 
-.items-list {
+.items-list
+{
     margin: 20px 0;
     max-height: 300px;
     overflow-y: auto;
@@ -66,7 +75,8 @@ button:hover {
     border-radius: 8px;
 }
 
-.item {
+.item
+{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -75,24 +85,42 @@ button:hover {
     background: #f9f9f9;
 }
 
-.item:last-child {
+.item:last-child
+{
     border-bottom: none;
 }
 
-.delt-btn {
+.delt-btn
+{
     background: #ff4757;
     padding: 6px 12px;
     font-size: 14px;
 }
 
-.edit-btn {
+.edit-btn
+{
     background: #fff947;
+  /*  background: #ff4757;*/
     padding: 6px 12px;
     font-size: 14px;
 }
 
+.save-btn
+{
+    background: #47ff7b;
+    padding: 6px 12px;
+    font-size: 14px;
+}
 
-.info {
+.cncl-btn
+{
+    background: #667eea;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+.info
+{
     margin-top: 20px;
     padding: 15px;
     background: #f0f2f5;
@@ -101,11 +129,13 @@ button:hover {
     color: #666;
 }
 
-.info p {
+.info p
+{
     margin: 5px 0;
 }
 
-.table-columns {
+.table-columns
+{
     width: 100%;
     border-collapse: collapse;
     color: #666;
@@ -113,24 +143,29 @@ button:hover {
 }
 
 .table-columns th:nth-child(1),
-.table-columns td:nth-child(1) {
+.table-columns td:nth-child(1)
+{
     width: 10%; /* ID */
     text-align: center;
 }
 
 .table-columns th:nth-child(2),
-.table-columns td:nth-child(2) {
+.table-columns td:nth-child(2)
+{
     width: 25%; /* Наименование */
+    text-align: center;
 }
 
 .table-columns th:nth-child(3),
-.table-columns td:nth-child(3) {
+.table-columns td:nth-child(3)
+{
     width: 45%; /* Описание */
+    text-align: center;
 }
 
 .table-columns th:nth-child(4),
-.table-columns td:nth-child(4) {
+.table-columns td:nth-child(4)
+{
     width: 20%; /* Действия */
     text-align: center;
-    
 }

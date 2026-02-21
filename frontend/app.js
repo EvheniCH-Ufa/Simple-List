@@ -200,8 +200,8 @@ function editItem(rowNum)
 
    // Добавляем кнопку сохранения
     actnCell.innerHTML = `
-        <button onclick="saveItem()">💾</button>
-        <button onclick="cancelEdit()">❌</button>`;
+        <button class="save-btn" onclick="saveItem()">💾</button>
+        <button class="cncl-btn" onclick="cancelEdit()">❌</button>`;
 
     oldValues.name = oldName;
     oldValues.description = oldDesc;
@@ -209,6 +209,8 @@ function editItem(rowNum)
     oldValues.rowNum = rowNum;
 
     editRowGlob = rowNum;
+
+    document.getElementById(`edit_name${rowNum}`).focus();
 }
 
 async function loadData()
