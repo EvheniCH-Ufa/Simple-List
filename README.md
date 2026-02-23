@@ -115,3 +115,7 @@ graph TD
 - 🎨 **JavaScript (ES6+)** + **HTML/CSS** — адаптивный пользовательский интерфейс
 
 🔗 GitHub: [EvheniCH-Ufa/Simple-List](https://github.com/EvheniCH-Ufa/Simple-List)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1d8b417 (Readme.md)
